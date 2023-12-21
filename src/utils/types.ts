@@ -1,7 +1,10 @@
 export interface Light {
-  id: number;
-  name: string;
-  isOn: boolean;
+  user_id: number;
+  device_id: number;
+  device_name: string;
+  device_description?: string | null;
+  type_name: string;
+  status: string;
 }
 
 export interface UserLogin {
@@ -9,12 +12,14 @@ export interface UserLogin {
   pass: string;
 }
 
-export interface User extends UserLogin {
+export interface User {
   id: number;
-  phoneContact: string;
-  profilePicture: string;
-  location: string;
+  email: string;
+  phoneContact?: string;
+  profilePicture: string | null;
+  location?: string;
   username: string;
+  pass?: string;
 }
 
-export type SwitchAction = "on" | "off";
+export type SwitchAction = 1 | 0;

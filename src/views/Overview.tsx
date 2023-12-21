@@ -49,5 +49,9 @@ const Container = styled.div`
     justify-content: flex-start;
     gap: 15px;
   }
+
+  @media only screen and (max-width: 850px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
 export default Overview;

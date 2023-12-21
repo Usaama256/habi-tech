@@ -16,7 +16,7 @@ export const fetchAllLights = async (
 ): Promise<boolean> => {
   try {
     dispatch(refresh ? refreshLightsStart() : fetchLightsStart());
-    const res = await serverReq.get(`/habitech.api/allLights/${userId}`);
+    const res = await serverReq.get(`/allLights/${userId}`);
     if (res?.status === 200) {
       dispatch(lightsFetchSuccess(res.data));
       return Promise.resolve(true);
@@ -50,14 +50,14 @@ export const fetchAllLights = async (
 
 export const switchLight = async (
   dispatch: Dispatch,
-  id: number,
+  device_id: number,
   action: SwitchAction,
   userId: number
 ): Promise<boolean> => {
   try {
     dispatch(refreshLightsStart());
     const res = await serverReq.get(
-      `/habitech.api/switchlight/${id}/${action}/${userId}`
+      `/switchlight/${device_id}/${action}/${userId}`
     );
     if (res?.status === 200) {
       dispatch(lightsFetchSuccess(res.data));
@@ -97,9 +97,7 @@ export const switchAllLights = async (
 ): Promise<boolean> => {
   try {
     dispatch(refreshLightsStart());
-    const res = await serverReq.get(
-      `/habitech.api/switchalllights/${action}/${userId}`
-    );
+    const res = await serverReq.get(`/switchalllights/${action}/${userId}`);
     if (res?.status === 200) {
       dispatch(lightsFetchSuccess(res.data));
       return Promise.resolve(true);

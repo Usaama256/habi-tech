@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { ChangeEvent, ReactElement, useState } from "react";
 import {
   Link,
   Stack,
@@ -10,20 +10,86 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
-// ----------------------------------------------------------------------
+import { Dispatch } from "@reduxjs/toolkit";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../../utils/apiCalls";
+import { UserLogin } from "../../utils/types";
+import { useSnackbar } from "notistack";
+import { validateEmail } from "../../utils/commonMethods";
+import { RootState } from "../../utils/redux/store";
 
 const LoginForm = (): ReactElement => {
+  const { isFetching } = useSelector((state: RootState) => state.user);
   const navigate: NavigateFunction = useNavigate();
+  const dispatch: Dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+  const [email, setEmail] = useState<string>("");
+  const [pass, setPass] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const emailHandler = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
+    return setEmail(e.target.value);
+  };
+
+  const passHandler = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
+    return setPass(e.target.value);
+  };
+
+  const loginHandler = async (): Promise<void> => {
+    try {
+      if (isFetching || email.length < 10) {
+        return;
+      }
+      if (!validateEmail(email) || pass.length < 8) {
+        enqueueSnackbar("Login Failed UL1: Wrong User Credentials", {
+          variant: "warning",
+        });
+        return;
+      }
+      const user: UserLogin = { pass, email };
+      const res = await loginUser(dispatch, navigate, user);
+      if (res) {
+        enqueueSnackbar("Login Successful", { variant: "success" });
+      } else {
+        enqueueSnackbar(
+          "Login Failed UL2: Wrong User Credentials Or A Connection Issue",
+          {
+            variant: "error",
+          }
+        );
+      }
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar(
+        "Login Failed UL3: Wrong User Credentials Or A Connection Issue",
+        {
+          variant: "error",
+        }
+      );
+    }
+  };
+
   return (
     <Container>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField
+          name="email"
+          label="Email address"
+          value={email}
+          onChange={emailHandler}
+          disabled={isFetching}
+        />
 
         <TextField
           name="password"
           label="Password"
+          value={pass}
+          onChange={passHandler}
+          disabled={isFetching}
           type={showPassword ? "text" : "password"}
           InputProps={{
             endAdornment: (
@@ -61,7 +127,8 @@ const LoginForm = (): ReactElement => {
         size="large"
         color="inherit"
         variant="outlined"
-        onClick={() => false}
+        onClick={loginHandler}
+        disabled={isFetching}
       >
         Login
       </Button>

@@ -11,19 +11,19 @@ interface LightProps extends Light {
 
 const SingleLightWithSwitch = ({
   disabled,
-  isOn,
-  name,
+  status,
+  device_name,
   changeHandler,
-  id,
+  device_id,
 }: LightProps): ReactElement => {
   return (
-    <Container id={`light_${id}`}>
+    <Container id={`light_${device_id}`}>
       <div className="light_details">
-        <Lightbulb color={isOn ? "warning" : "disabled"} />
-        <h6>{name}</h6>
+        <Lightbulb color={status === "ON" ? "warning" : "disabled"} />
+        <h6>{device_name}</h6>
       </div>
       <SlideSwitch
-        checked={isOn}
+        checked={status === "ON"}
         changeHandler={changeHandler}
         disabled={disabled}
       />

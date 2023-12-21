@@ -5,7 +5,7 @@ const checkAllLightsOn = (lights: Light[]): boolean => {
   try {
     let allOn: boolean = true;
     for (let i = 0; i < lights.length; i++) {
-      if (!lights[i].isOn) {
+      if (lights[i].status === "OFF") {
         allOn = false;
         break;
       }
@@ -16,7 +16,14 @@ const checkAllLightsOn = (lights: Light[]): boolean => {
     return false;
   }
 };
-
+/* 
+ "user_id": 1,
+ "device_id": 1,
+ "device_name": "Kitchen Lights",
+ "device_description": null,
+ "type_name": "Light",
+ "status": "OFF"
+*/
 const lightsSlice = createSlice({
   name: "lights",
   initialState: {

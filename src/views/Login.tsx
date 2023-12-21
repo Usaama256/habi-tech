@@ -9,7 +9,7 @@ const Login = (): ReactElement => {
   return (
     <WithNoBars>
       <Container
-        style={{ backgroundImage: `url(${sketchyBg}), url(${linesBg})` }}
+        style={{ backgroundImage: `url(${linesBg}), url(${sketchyBg})` }}
       >
         <div className="col col_1">
           <div className="header">
@@ -41,6 +41,23 @@ const Container = styled.div`
   }
   .col_1 {
     padding: 0px 40px 0px 100px;
+
+    .header {
+      width: 100%;
+      padding: 10px;
+    }
+  }
+
+  @media only screen and (max-width: 850px) {
+    grid-template-columns: repeat(1, 1fr);
+
+    .col_1 {
+      padding: 0px 20px 0px 20px;
+
+      .header {
+        text-align: center;
+      }
+    }
   }
 `;
 export default Login;

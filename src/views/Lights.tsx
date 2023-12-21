@@ -23,6 +23,10 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 3fr);
   gap: 30px;
+
+  @media only screen and (max-width: 850px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
 
 export default Lights;

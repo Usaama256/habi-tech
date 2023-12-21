@@ -7,6 +7,9 @@ import { SideBar, TopBar } from "../navigation";
 import { RootState } from "../../utils/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { closeSidebar, openSidebar } from "../../utils/redux/slices";
+import { useMediaQuery } from "react-responsive";
+import TopBarSmallView from "../navigation/TopBarSmallView";
+import SideBarSmallView from "../navigation/SideBarSmallView";
 
 interface LayoutProps {
   children: ReactElement;
@@ -17,6 +20,9 @@ const WithBarsPresent = ({ children, viewName }: LayoutProps): ReactElement => {
   const theme: Theme = useTheme();
   const { sidebar } = useSelector((state: RootState) => state.nav);
   const dispatch = useDispatch();
+  const isDisplayNarrow880: boolean = useMediaQuery({
+    query: "(max-width: 880px)",
+  });
 
   // const [open, setOpen] = useState<boolean>(false);
 
@@ -28,18 +34,35 @@ const WithBarsPresent = ({ children, viewName }: LayoutProps): ReactElement => {
   return (
     <Box sx={{ display: "flex" }}>
       {/* <CssBaseline /> */}
-      <TopBar
-        isOpen={sidebar}
-        handleDrawer={handleDrawer}
-        viewName={viewName}
-      />
-      <SideBar isOpen={sidebar} handleDrawer={handleDrawer} theme={theme} />
+      {isDisplayNarrow880 ? (
+        <TopBarSmallView
+          isOpen={sidebar}
+          handleDrawer={handleDrawer}
+          viewName={viewName}
+        />
+      ) : (
+        <TopBar
+          isOpen={sidebar}
+          handleDrawer={handleDrawer}
+          viewName={viewName}
+        />
+      )}
+
+      {isDisplayNarrow880 ? (
+        <SideBarSmallView
+          isOpen={sidebar}
+          handleDrawer={handleDrawer}
+          theme={theme}
+        />
+      ) : (
+        <SideBar isOpen={sidebar} handleDrawer={handleDrawer} theme={theme} />
+      )}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          marginTop: "30px",
+          p: isDisplayNarrow880 ? 2 : 3,
+          margin: "30px 0px 0px 0px",
           width: "100%",
           height: "100%",
         }}

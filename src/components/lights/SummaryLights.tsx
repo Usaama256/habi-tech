@@ -22,30 +22,40 @@ const SummaryLights = ({ isSummary }: Props): ReactElement => {
   const dispatch: Dispatch = useDispatch();
 
   const switchAllLightsHandler = async (): Promise<boolean> => {
-    if (!fetchingLights && !refreshingLights) {
+    if (fetchingLights || refreshingLights) {
       return false;
     }
     const success = allLightsOn
-      ? await switchAllLights(dispatch, "off", currentUser?.id)
-      : await switchAllLights(dispatch, "on", currentUser?.id);
+      ? await switchAllLights(dispatch, 0, currentUser?.id)
+      : await switchAllLights(dispatch, 1, currentUser?.id);
     !success && console.log("Failed To Switch All Lights");
     return success;
   };
 
   const switchSingleLightsHandler = async (
-    status: boolean,
+    status: string,
     id: number,
     name: string
   ): Promise<boolean> => {
-    if (!fetchingLights && !refreshingLights) {
+    if (fetchingLights || refreshingLights) {
       return false;
     }
-    const success = status
-      ? await switchLight(dispatch, id, "off", currentUser?.id)
-      : await switchLight(dispatch, id, "on", currentUser?.id);
+    const success =
+      status === "ON"
+        ? await switchLight(dispatch, id, 0, currentUser?.id)
+        : await switchLight(dispatch, id, 1, currentUser?.id);
     !success && console.log(`Failed To Switch Lights ${name}(${id})`);
     return success;
   };
+
+  // const userAgent: string =
+  //   typeof navigator === "undefined" ? "SSR" : navigator.userAgent;
+
+  // const isMobile: boolean =
+  //   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+  //     userAgent
+  //   );
+
   return (
     <Card>
       <div className="header">
@@ -53,7 +63,7 @@ const SummaryLights = ({ isSummary }: Props): ReactElement => {
         <SlideSwitch
           checked={allLightsOn}
           changeHandler={switchAllLightsHandler}
-          disabled={fetchingLights || refreshingLights}
+          disabled={false}
         />
       </div>
       <Divider />
@@ -64,9 +74,13 @@ const SummaryLights = ({ isSummary }: Props): ReactElement => {
               <SingleLightWithSwitch
                 {...i}
                 changeHandler={() =>
-                  switchSingleLightsHandler(i.isOn, i.id, i.name)
+                  switchSingleLightsHandler(
+                    i.status,
+                    i.device_id,
+                    i.device_name
+                  )
                 }
-                disabled={fetchingLights || refreshingLights}
+                disabled={false}
                 key={n}
               />
             );
