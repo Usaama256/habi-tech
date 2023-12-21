@@ -12,7 +12,6 @@ import { UserLogin } from "../types";
 import { AxiosError } from "axios";
 import { lightsFetchSuccess } from "../redux/slices";
 import { NavigateFunction } from "react-router-dom";
-import { devicesData, userData } from "../../store/dummies";
 
 export const loginUser = async (
   dispatch: Dispatch,
@@ -20,11 +19,6 @@ export const loginUser = async (
   user: UserLogin
 ): Promise<boolean> => {
   try {
-    dispatch(lightsFetchSuccess(devicesData));
-    dispatch(userFetchSuccess(userData));
-
-    return true;
-
     dispatch(fetchUserStart());
     const res = await serverReq.post(`/login`, user);
     if (res?.status === 200) {
